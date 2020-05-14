@@ -1,0 +1,88 @@
+---
+title: "How it works"
+author: "Cervan Girard"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{How it works}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  eval=FALSE,
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+# 1 -  Get the token
+
+The first step is to retrieve a token.
+
+Open todoist website to find it :
+
+```{r}
+library(todoist)
+todoist::open_todoist_website_profile()
+token <- "YOURTOKEN" # copied and pasted from website
+```
+
+
+## Now save your token securly into R (one time per computer)
+
+We use {keyring} features to do it. 
+
+```{r}
+set_todoist_api_token(token)
+```
+
+
+# 2 - Now, let's play !
+
+## Create new project, add tasks and users
+
+#### Add new project
+
+Don't forget to store the result to reuse the identifier of the new project.
+
+```{r}
+id_proj <- add_project(project_name = "test",verbose = TRUE) 
+```
+
+#### Add task to this project
+
+```{r}
+id_proj %>%
+  add_task_in_project("my_tasks")
+```
+
+#### Add users to this porject
+
+```{r}
+id_proj %>%
+  add_users_in_project(list_of_users = "your@mail.fr")
+```
+
+#### All in the same time 
+
+```{r}
+add_project(project_name = "test",verbose = TRUE) %>%
+  add_tasks_in_project(tasks_list = 
+                         list("First task",
+                              "Second task")
+                       ) %>%
+  add_responsible_to_task("First task", add_responsible = "jean@mail.fr")
+```
+
+
+#### More specific :
+
+At ThinkR, we have a template for tasks. All functions starting with 'init' allow us to have templates for specific projects, such as service or training.
+
+```{r}
+add_project("my_mission") %>% 
+  init_presta()
+```
+
